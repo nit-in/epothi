@@ -1,0 +1,32 @@
+env:
+  rclone_config: ENCRYPTED[1e78286ba76603e51798164fe268a0a42c4520cae38cc8ef003b3bbef78122dab81c89e2702c43f7cc32c22298757d51]
+  bot_token: ENCRYPTED[65fceffc2fff094305ff156902a2120e63e1a66ce63de2cb0d2c89e0070a038860b4cec587c99129b4a86ec8672c752a]
+  channel_id: ENCRYPTED[73c82384ba5e859bfdfdb61091244a1499d642570c94c3b722655274d7c5ae5bde71026c7da40f4b31a0738dfc7ff4da]
+
+
+#Feb 2020 run
+
+task:
+  name: epaper_daily
+  timeout_in: 120m
+  only_if: $CIRRUS_BRANCH == 'master'
+  only_if: $CIRRUS_CRON == "daily"
+  container:
+    image: python:latest
+  initialize_script:
+    - apt update
+    - apt install --fix-missing -y rclone fd-find
+    - ln -s $(which fdfind) /usr/bin/fd
+    - pip install -r requirements.txt
+    - mkdir -p /root/.config/rclone
+    - mkdir -p /tmp/epothi
+    - touch /tmp/failed.txt
+    - touch /root/.config/rclone/rclone.conf
+    - echo "${rclone_config}" >> /root/.config/rclone/rclone.conf
+    - rclone tree 'gdrive:' | tee /root/gdrive.txt
+    - cat /tmp/gdrive.txt
+  epaper_daily_script:
+    - source .env
+    - shopt -s globstar
+    - epaper_today
+    - telegram_up_current $bot_token $channel_id
