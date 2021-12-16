@@ -20,7 +20,7 @@ task:
     - touch /tmp/failed.txt
     - touch /root/.config/rclone/rclone.conf
     - echo "${rclone_config}" >> /root/.config/rclone/rclone.conf
-    - rclone tree 'gdrive:' | tee /root/gdrive.txt
+    - rclone tree 'gdrive:' | tee /tmp/gdrive.txt
     - cat /tmp/gdrive.txt
   epaper_daily_script:
     - source .env
@@ -44,7 +44,7 @@ task:
     - touch /tmp/failed.txt
     - touch /root/.config/rclone/rclone.conf
     - echo "${rclone_config}" >> /root/.config/rclone/rclone.conf
-    - rclone tree 'gdrive:' | tee /root/gdrive.txt
+    - rclone tree 'gdrive:' | tee /tmp/gdrive.txt
     - cat /tmp/gdrive.txt
   epaper_daily_script:
     - source .env
