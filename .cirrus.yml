@@ -4,12 +4,33 @@ env:
   channel_id: ENCRYPTED[8802ac0017f5751d895ebe7dd3e34fab24844be198b3f5fc3e8cce2cd84f119b185c4f238df651dbe2770ddc19524cbf]
 
 
-#Feb 2020 run
 
 task:
   name: epaper_today
   timeout_in: 120m
-  only_if: $CIRRUS_BRANCH == 'main'
+  container:
+    image: python:latest
+  initialize_script:
+    - apt update
+    - apt install --fix-missing -y rclone fd-find
+    - ln -s $(which fdfind) /usr/bin/fd
+    - pip install -r requirements.txt
+    - mkdir -p /root/.config/rclone
+    - mkdir -p /tmp/epothi
+    - touch /tmp/failed.txt
+    - touch /root/.config/rclone/rclone.conf
+    - echo "${rclone_config}" >> /root/.config/rclone/rclone.conf
+    - rclone tree 'gdrive:' | tee /root/gdrive.txt
+    - cat /tmp/gdrive.txt
+  epaper_daily_script:
+    - source .env
+    - shopt -s globstar
+    - epaper_today
+    - telegram_up_current $bot_token $channel_id
+
+task:
+  name: epaper_today_daily
+  timeout_in: 120m
   only_if: $CIRRUS_CRON == "daily"
   container:
     image: python:latest
