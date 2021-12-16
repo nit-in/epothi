@@ -7,7 +7,7 @@ env:
 #Feb 2020 run
 
 task:
-  name: epaper_daily
+  name: epaper_today
   timeout_in: 120m
   only_if: $CIRRUS_BRANCH == 'main'
   only_if: $CIRRUS_CRON == "daily"
