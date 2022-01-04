@@ -4,30 +4,6 @@ env:
   channel_id: ENCRYPTED[b7aa15b821b8d52e040dd27c36a3ee36c353add68d68711a1798c4cdbdf9d3cab1babb7565ff9546d2cc728ef9b202ce]
 
 
-
-task:
-  name: epaper_today
-  timeout_in: 120m
-  container:
-    image: python:latest
-  initialize_script:
-    - apt update
-    - apt install --fix-missing -y rclone fd-find
-    - ln -s $(which fdfind) /usr/bin/fd
-    - pip install -r requirements.txt
-    - mkdir -p /root/.config/rclone
-    - mkdir -p /tmp/epothi
-    - touch /tmp/failed.txt
-    - touch /root/.config/rclone/rclone.conf
-    - echo "${rclone_config}" >> /root/.config/rclone/rclone.conf
-    - rclone tree 'gdrive:' | tee /tmp/gdrive.txt
-    - cat /tmp/gdrive.txt
-  epaper_daily_script:
-    - source .env
-    - shopt -s globstar
-    - epaper_today
-    - telegram_up_current $bot_token $channel_id
-
 task:
   name: epaper_today_daily
   timeout_in: 120m
