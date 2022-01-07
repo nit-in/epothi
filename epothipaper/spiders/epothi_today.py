@@ -17,7 +17,7 @@ class EpothiSpider(scrapy.Spider):
 		end_date = date.today()
 		news_date = end_date.strftime("%d-%m-%Y")
 		eng_link = self.base_link + str(news_date) + "/English/"
-		for newspaper in ['BL','BS', 'ET','FE', 'NIE', 'Hindu', 'Mint']:
+		for newspaper in ['BL','BS', 'ET','FE', 'NIE', 'IE', 'Hindu', 'Mint']:
 			paper_link = eng_link + newspaper
 			print(paper_link)
 			yield scrapy.Request(paper_link,self.parse_link)
