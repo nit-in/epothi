@@ -1,4 +1,4 @@
-yarl==1.6.3
+yarl==1.8.1
 itemadapter==0.4.0
 requests==2.25.0
 Scrapy==2.5.0
